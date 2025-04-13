@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vite + Vue + TS</title>
+        <style>
+            #app:empty {
+                --spinnerSize: 60px;
+                --spinnerColor: var(--bs-primary);
+
+                position: relative;
+                width: 100vw;
+                height: 100vh;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &::before {
+                    content: '';
+                    display: block;
+                    width: var(--spinnerSize);
+                    height: var(--spinnerSize);
+                    border-radius: 50%;
+                    border: 3px solid var(--spinnerColor);
+                    border-left-color: transparent;
+                    animation: spin 1s linear infinite;
+                }
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @media (prefers-color-scheme: dark) {
+                #app:empty::before {
+                    --spinnerColor: var(--bs-primary);
+                }
+            }
+        </style>
+      <script type="module" crossorigin src="/assets/index-DMxpoHsR.js"></script>
+      <link rel="stylesheet" crossorigin href="/assets/index-CC_msBEy.css">
+    </head>
+    <body>
+        <div id="app"></div>
+        <script>
+            window.addEventListener('load', () => {
+                if (!window.vueAgenda) return;
+
+                const agenda = window.vueAgenda();
+
+                agenda.mount('#app');
+            });
+        </script>
+    </body>
+</html>

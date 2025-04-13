@@ -1,0 +1,25 @@
+.btn-calendar-light {
+    --bs-btn-padding-x: 0;
+    --bs-btn-padding-y: 0;
+    --bs-btn-bg: var(--bs-body-bg);
+    --bs-btn-hover-bg: rgba(0, 0, 0, 0.07);
+    --bs-btn-focus-bg: rgba(0, 0, 0, 0.07);
+
+    aspect-ratio: 1/1;
+
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    border-radius: 50%;
+}
+
+[data-bs-theme='dark'] {
+    .btn-calendar-light {
+        --bs-btn-hover-bg: #6c757d;
+        --bs-btn-focus-bg: #6c757d;
+    }
+}
