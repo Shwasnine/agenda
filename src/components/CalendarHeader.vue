@@ -20,7 +20,7 @@
                 Hoje
             </button>
 
-            <button class="btn btn-calendar-light" @click.prevent="next">
+            <button class="btn btn-calendar-light" @click.prevent="prev">
                 <ChevronLeft />
             </button>
 
@@ -47,7 +47,7 @@
                 class="btn btn-outline-secondary d-flex gap-2 align-items-center"
                 data-bs-toggle="dropdown"
             >
-                <span>{{ viewModeText[viewMode] }}</span>
+                <span>{{ viewModeText[viewMode as keyof ViewModeText] }}</span>
                 <ChevronDown />
             </button>
 
@@ -106,7 +106,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
+import type { ViewModeText } from '../composables/useViewMode';
 
 // Composables
 import { useCurrentDate } from '../composables/useCurrentDate';
@@ -122,7 +123,6 @@ import {
     ChevronDown,
     ChevronRight,
     Search,
-    Check,
 } from 'lucide-vue-next';
 
 import ColorTheme from './ColorTheme.vue';

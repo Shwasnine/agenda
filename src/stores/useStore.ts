@@ -1,9 +1,9 @@
 import { reactive } from 'vue';
 
 const State = reactive({
-    currentDate: localStorage.getItem('currentData') || new Date(),
+    currentDate: new Date(),
     today: new Date(),
-    viewMode: localStorage.getItem('viewMode') || 'month',
+    viewMode: 'month',
     isOpenSidebar: true,
     agendas: [
         {

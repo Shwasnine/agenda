@@ -2,8 +2,13 @@ import { computed } from 'vue';
 import { useStore } from '../stores/useStore';
 
 type ViewMode = 'day' | 'week' | 'month' | 'year';
-
-const viewModeText = {
+export type ViewModeText = {
+    day: 'Dia';
+    week: 'Semana';
+    month: 'Mês';
+    year: 'Ano';
+};
+const viewModeText: ViewModeText = {
     day: 'Dia',
     week: 'Semana',
     month: 'Mês',
