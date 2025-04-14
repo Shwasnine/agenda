@@ -2,7 +2,7 @@
     <aside class="calendar__sidebar">
         <CriarEvento />
 
-        [MINI CALENDARIO AQUI]
+        <MiniCalendario />
 
         <MinhasAgendas />
     </aside>
@@ -10,6 +10,7 @@
 
 <script lang="ts" setup>
 import CriarEvento from './CriarEvento.vue';
+import MiniCalendario from './MiniCalendario.vue';
 import MinhasAgendas from './MinhasAgendas.vue';
 </script>
 

@@ -28,7 +28,7 @@
             <time
                 :datetime="toISO(currentDate)"
                 class="calendar__current__date"
-                >{{ formatMonthYear(currentDate) }}</time
+                >{{ dataFormatada }}</time
             >
         </div>
         <!--/.calendar__controls-->
@@ -79,6 +79,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, watch } from 'vue';
+
 // Composables
 import { useCurrentDate } from '../composables/useCurrentDate';
 import { useDateUtils } from '../composables/useDateUtils';
@@ -103,6 +105,10 @@ import CalendarSettings from './CalendarSettings.vue';
 // Methods dos composables
 const { currentDate, resetCurrentDate } = useCurrentDate();
 const { toISO, formatMonthYear } = useDateUtils('pt-BR');
+
+const dataFormatada = computed(() => {
+    return formatMonthYear(currentDate.value);
+});
 </script>
 
 <style lang="scss" scoped>

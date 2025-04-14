@@ -1,14 +1,16 @@
 import { ref } from 'vue';
 
+const today = ref<Date>(new Date());
+const currentDate = ref<Date>(today.value);
+
 export const useCurrentDate = () => {
-    const today = ref<Date>(new Date());
-    const currentDate = ref<Date>(today.value);
     const setCurrentDate = (date: Date) => {
         currentDate.value = date;
     };
     const resetCurrentDate = () => {
         currentDate.value = today.value;
     };
+
     const isToday = (date: Date) => {
         const todayDate = new Date(
             today.value.getFullYear(),
@@ -22,6 +24,21 @@ export const useCurrentDate = () => {
         );
         return todayDate.getTime() === compareDate.getTime();
     };
+
+    const isCurrentDate = (date: Date) => {
+        const currentDateValue = new Date(
+            currentDate.value.getFullYear(),
+            currentDate.value.getMonth(),
+            currentDate.value.getDate()
+        );
+        const compareDate = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate()
+        );
+        return currentDateValue.getTime() === compareDate.getTime();
+    };
+
     const isTomorrow = (date: Date) => {
         const tomorrowDate = new Date(
             today.value.getFullYear(),
@@ -74,6 +91,9 @@ export const useCurrentDate = () => {
         );
         return todayDate.getTime() === compareDate.getTime();
     };
+
+    (window as any).setCurrentDate = setCurrentDate;
+
     return {
         today,
         currentDate,
@@ -81,6 +101,7 @@ export const useCurrentDate = () => {
         resetCurrentDate,
         isToday,
         isTomorrow,
+        isCurrentDate,
         isYesterday,
         isSameMonth,
         isSameYear,
