@@ -1,6 +1,9 @@
 <template>
     <header class="calendar__header">
-        <button class="btn btn-calendar-light">
+        <button
+            class="btn btn-calendar-light"
+            @click.prevent="State.isOpenSidebar = !State.isOpenSidebar"
+        >
             <Menu />
         </button>
 
@@ -17,11 +20,11 @@
                 Hoje
             </button>
 
-            <button class="btn btn-calendar-light">
+            <button class="btn btn-calendar-light" @click.prevent="next">
                 <ChevronLeft />
             </button>
 
-            <button class="btn btn-calendar-light">
+            <button class="btn btn-calendar-light" @click.prevent="next">
                 <ChevronRight />
             </button>
 
@@ -44,16 +47,40 @@
                 class="btn btn-outline-secondary d-flex gap-2 align-items-center"
                 data-bs-toggle="dropdown"
             >
-                <span>Mês</span>
+                <span>{{ viewModeText[viewMode] }}</span>
                 <ChevronDown />
             </button>
 
             <div class="dropdown-menu">
-                <button class="dropdown-item">Dia</button>
-                <button class="dropdown-item">Semana</button>
-                <button class="dropdown-item active">Mês</button>
-                <button class="dropdown-item">Ano</button>
-                <button class="dropdown-item">Programação</button>
+                <button
+                    class="dropdown-item"
+                    :class="{ active: viewMode === 'day' }"
+                    @click.prevent="setViewMode('day')"
+                >
+                    Dia
+                </button>
+                <button
+                    class="dropdown-item"
+                    :class="{ active: viewMode === 'week' }"
+                    @click.prevent="setViewMode('week')"
+                >
+                    Semana
+                </button>
+                <button
+                    class="dropdown-item"
+                    :class="{ active: viewMode === 'month' }"
+                    @click.prevent="setViewMode('month')"
+                >
+                    Mês
+                </button>
+                <button
+                    class="dropdown-item"
+                    :class="{ active: viewMode === 'year' }"
+                    @click.prevent="setViewMode('year')"
+                >
+                    Ano
+                </button>
+                <!--<button class="dropdown-item">Programação</button>
                 <button class="dropdown-item">4 dias</button>
                 <div class="dropdown-divider"></div>
                 <button class="dropdown-item d-flex align-items-center gap-2">
@@ -68,7 +95,7 @@
                 <button class="dropdown-item d-flex align-items-center gap-2">
                     <Check />
                     <span>Mostrar agendamentos de horários</span>
-                </button>
+                </button>-->
             </div>
         </div>
 
@@ -84,6 +111,8 @@ import { computed, watch } from 'vue';
 // Composables
 import { useCurrentDate } from '../composables/useCurrentDate';
 import { useDateUtils } from '../composables/useDateUtils';
+import { useViewMode } from '../composables/useViewMode';
+import { useStore } from '../stores/useStore';
 
 // Components
 import {
@@ -99,16 +128,41 @@ import {
 import ColorTheme from './ColorTheme.vue';
 import CalendarSettings from './CalendarSettings.vue';
 
-// Utilities
-// import { useCalendarStore } from '../stores/calendarStore';
+// State
+const { State } = useStore();
 
 // Methods dos composables
-const { currentDate, resetCurrentDate } = useCurrentDate();
+const {
+    currentDate,
+    resetCurrentDate,
+    nextMonth,
+    prevMonth,
+    nextYear,
+    prevYear,
+} = useCurrentDate();
 const { toISO, formatMonthYear } = useDateUtils('pt-BR');
+const { viewMode, viewModeText, setViewMode } = useViewMode();
 
+// Computeds
 const dataFormatada = computed(() => {
     return formatMonthYear(currentDate.value);
 });
+
+// Métodos
+const next = () => {
+    if (viewMode.value === 'day' || viewMode.value === 'month') {
+        nextMonth();
+    } else if (viewMode.value === 'year') {
+        nextYear();
+    }
+};
+const prev = () => {
+    if (viewMode.value === 'day' || viewMode.value === 'month') {
+        prevMonth();
+    } else if (viewMode.value === 'year') {
+        prevYear();
+    }
+};
 </script>
 
 <style lang="scss" scoped>

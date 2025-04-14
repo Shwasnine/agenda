@@ -24,30 +24,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { ChevronDown } from 'lucide-vue-next';
 import Agenda from './Agenda.vue';
+import { useStore } from '../stores/useStore';
 
-const agendas = ref([
-    {
-        id: 1,
-        name: 'Agenda A',
-        color: '#AD1457',
-        selected: true,
-    },
-    {
-        id: 2,
-        name: 'Agenda B',
-        color: '#0B8043',
-        selected: false,
-    },
-    {
-        id: 3,
-        name: 'Agenda C',
-        color: '#8E24AA',
-        selected: true,
-    },
-]);
+const { State } = useStore();
+
+const agendas = computed(() => State.agendas);
 
 const onUpdateAgenda = (payload: {
     selected: boolean;

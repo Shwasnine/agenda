@@ -1,7 +1,26 @@
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { useStore } from '../stores/useStore';
 
-const today = ref<Date>(new Date());
-const currentDate = ref<Date>(today.value);
+const { State } = useStore();
+
+const today = computed({
+    get() {
+        return State.today;
+    },
+    set(newValue) {
+        State.today = newValue;
+        localStorage.setItem('today', newValue.toString());
+    },
+});
+const currentDate = computed({
+    get() {
+        return State.currentDate;
+    },
+    set(newValue) {
+        State.currentDate = newValue;
+        localStorage.setItem('currentDate', newValue.toString());
+    },
+});
 
 export const useCurrentDate = () => {
     const setCurrentDate = (date: Date) => {
@@ -9,6 +28,29 @@ export const useCurrentDate = () => {
     };
     const resetCurrentDate = () => {
         currentDate.value = today.value;
+    };
+
+    const nextMonth = () => {
+        const nextMonthDate = new Date(currentDate.value.getTime());
+        nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+        currentDate.value = nextMonthDate;
+    };
+    const prevMonth = () => {
+        const prevMonthDate = new Date(currentDate.value.getTime());
+        prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+        currentDate.value = prevMonthDate;
+    };
+
+    const nextYear = () => {
+        const nexYearDate = new Date(currentDate.value.getTime());
+        nexYearDate.setFullYear(nexYearDate.getFullYear() + 1);
+        currentDate.value = nexYearDate;
+    };
+
+    const prevYear = () => {
+        const prevYearDate = new Date(currentDate.value.getTime());
+        prevYearDate.setFullYear(prevYearDate.getFullYear() - 1);
+        currentDate.value = prevYearDate;
     };
 
     const isToday = (date: Date) => {
@@ -99,6 +141,12 @@ export const useCurrentDate = () => {
         currentDate,
         setCurrentDate,
         resetCurrentDate,
+
+        nextMonth,
+        prevMonth,
+        nextYear,
+        prevYear,
+
         isToday,
         isTomorrow,
         isCurrentDate,
