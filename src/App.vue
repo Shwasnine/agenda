@@ -3,6 +3,8 @@
         <CalendarHeader />
 
         <CalendarSidebar />
+
+        <CalendarView />
     </div>
     <!--/.calendar__app-->
 </template>
@@ -10,6 +12,7 @@
 <script lang="ts" setup>
 import CalendarHeader from './components/CalendarHeader.vue';
 import CalendarSidebar from './components/CalendarSidebar.vue';
+import CalendarView from './components/CalendarView.vue';
 </script>
 
 <style lang="scss" scoped>

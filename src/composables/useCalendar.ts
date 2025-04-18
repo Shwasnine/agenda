@@ -1,5 +1,6 @@
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useCurrentDate } from './useCurrentDate';
+import { useStore } from '../stores/useStore';
 
 export interface CalendarEvent {
     id: string | number;
@@ -14,7 +15,10 @@ export interface CalendarEvent {
 
 export const useCalendar = () => {
     const { currentDate } = useCurrentDate();
-    const events = ref<CalendarEvent[]>([]);
+    const { State } = useStore();
+
+    // Eventos armazenados no State
+    const events = computed(() => State.eventos as CalendarEvent[]);
 
     // Eventos para a data selecionada
     const eventsForSelectedDate = computed(() => {
@@ -64,60 +68,21 @@ export const useCalendar = () => {
         if (!newEvent.id) {
             newEvent.id = Date.now().toString();
         }
-        events.value.push(newEvent);
+        State.eventos.push(newEvent);
     };
 
     // Atualizar um evento
     const updateEvent = (updatedEvent: CalendarEvent) => {
-        const index = events.value.findIndex((e) => e.id === updatedEvent.id);
+        const index = State.eventos.findIndex((e) => e.id === updatedEvent.id);
         if (index !== -1) {
-            events.value[index] = { ...updatedEvent };
+            State.eventos[index] = { ...updatedEvent };
         }
     };
 
     // Remover um evento
     const removeEvent = (eventId: string | number) => {
-        events.value = events.value.filter((e) => e.id !== eventId);
+        State.eventos = State.eventos.filter((e) => e.id !== eventId);
     };
-
-    // Exemplo de eventos para desenvolvimento
-    const addDemoEvents = () => {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-
-        const nextWeek = new Date(today);
-        nextWeek.setDate(nextWeek.getDate() + 7);
-
-        addEvent({
-            id: '1',
-            title: 'Reunião com cliente',
-            description: 'Discussão sobre o novo projeto',
-            startDate: today,
-            colorId: 1,
-            color: '#AD1457',
-        });
-
-        addEvent({
-            id: '2',
-            title: 'Consulta médica',
-            startDate: tomorrow,
-            colorId: 2,
-            color: '#0B8043',
-        });
-
-        addEvent({
-            id: '3',
-            title: 'Entrega do projeto',
-            description: 'Prazo final para entrega do MVP',
-            startDate: nextWeek,
-            colorId: 3,
-            color: '#8E24AA',
-        });
-    };
-
-    // Inicializar com eventos de demonstração
-    addDemoEvents();
 
     return {
         events,

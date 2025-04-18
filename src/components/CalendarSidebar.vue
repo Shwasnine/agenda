@@ -1,17 +1,28 @@
 <template>
-    <aside class="calendar__sidebar">
+    <aside
+        class="calendar__sidebar"
+        :class="{ 'calendar__sidebar--closed': !isOpen }"
+    >
         <CriarEvento />
 
         <MiniCalendario />
+
+        <CalendarEvents />
 
         <MinhasAgendas />
     </aside>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue';
 import CriarEvento from './CriarEvento.vue';
 import MiniCalendario from './MiniCalendario.vue';
+import CalendarEvents from './CalendarEvents.vue';
 import MinhasAgendas from './MinhasAgendas.vue';
+import { useStore } from '../stores/useStore';
+
+const { State } = useStore();
+const isOpen = computed(() => State.isOpenSidebar);
 </script>
 
 <style lang="scss" scoped>
@@ -32,5 +43,10 @@ import MinhasAgendas from './MinhasAgendas.vue';
     line-height: var(--bs-body-line-height);
 
     border-right: 1px solid var(--bs-border-color);
+    transition: transform 0.3s ease;
+
+    &--closed {
+        transform: translateX(-100%);
+    }
 }
 </style>
