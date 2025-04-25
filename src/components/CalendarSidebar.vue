@@ -7,8 +7,6 @@
 
         <MiniCalendario />
 
-        <CalendarEvents />
-
         <MinhasAgendas />
     </aside>
 </template>
@@ -17,7 +15,6 @@
 import { computed } from 'vue';
 import CriarEvento from './CriarEvento.vue';
 import MiniCalendario from './MiniCalendario.vue';
-import CalendarEvents from './CalendarEvents.vue';
 import MinhasAgendas from './MinhasAgendas.vue';
 import { useStore } from '../stores/useStore';
 

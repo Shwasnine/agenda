@@ -2,28 +2,19 @@ import { computed } from 'vue';
 import { useCurrentDate } from './useCurrentDate';
 import { useStore } from '../stores/useStore';
 
-export interface CalendarEvent {
-    id: string | number;
-    title: string;
-    description?: string;
-    startDate: Date;
-    endDate?: Date;
-    allDay?: boolean;
-    colorId?: string | number;
-    color?: string;
-}
+import type { Evento } from '../models/Evento';
 
 export const useCalendar = () => {
     const { currentDate } = useCurrentDate();
     const { State } = useStore();
 
     // Eventos armazenados no State
-    const events = computed(() => State.eventos as CalendarEvent[]);
+    const events = computed(() => State.eventos);
 
     // Eventos para a data selecionada
     const eventsForSelectedDate = computed(() => {
         return events.value.filter((event) => {
-            const eventDate = new Date(event.startDate);
+            const eventDate = new Date(event.dataInicio);
             return (
                 eventDate.getDate() === currentDate.value.getDate() &&
                 eventDate.getMonth() === currentDate.value.getMonth() &&
@@ -37,7 +28,7 @@ export const useCalendar = () => {
         const dates = new Map<string, number>();
 
         events.value.forEach((event) => {
-            const eventDate = new Date(event.startDate);
+            const eventDate = new Date(event.dataInicio);
             const dateKey = `${eventDate.getFullYear()}-${eventDate.getMonth()}-${eventDate.getDate()}`;
 
             if (dates.has(dateKey)) {
@@ -63,7 +54,7 @@ export const useCalendar = () => {
     };
 
     // Adicionar um evento
-    const addEvent = (event: CalendarEvent) => {
+    const addEvent = (event: Evento) => {
         const newEvent = { ...event };
         if (!newEvent.id) {
             newEvent.id = Date.now().toString();
@@ -72,7 +63,7 @@ export const useCalendar = () => {
     };
 
     // Atualizar um evento
-    const updateEvent = (updatedEvent: CalendarEvent) => {
+    const updateEvent = (updatedEvent: Evento) => {
         const index = State.eventos.findIndex((e) => e.id === updatedEvent.id);
         if (index !== -1) {
             State.eventos[index] = { ...updatedEvent };

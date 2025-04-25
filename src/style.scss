@@ -1,1 +1,7 @@
 @import './assets/scss/buttons/buttons.scss';
+
+.modal-backdrop {
+    --bs-backdrop-opacity: 1;
+    --bs-backdrop-bg: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}

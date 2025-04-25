@@ -40,9 +40,14 @@
                             v-for="event in getEventsForDate(day.date)"
                             :key="event.id"
                             class="calendar__day-event"
-                            :style="{ '--event-color': event.color }"
+                            :style="{ '--event-color': event.cor }"
+                            v-tooltip="{
+                                title: event.titulo,
+                            }"
                         >
-                            {{ event.title }}
+                            <span class="visually-hidden">{{
+                                event.titulo
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -138,7 +143,7 @@ const selectDate = (date: Date) => {
 // Obter eventos para uma data específica
 const getEventsForDate = (date: Date) => {
     return events.value.filter((event) => {
-        const eventDate = new Date(event.startDate);
+        const eventDate = new Date(event.dataInicio);
         return (
             eventDate.getDate() === date.getDate() &&
             eventDate.getMonth() === date.getMonth() &&
@@ -158,7 +163,7 @@ const getEventsForDate = (date: Date) => {
 
 .calendar__weekdays {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 14.285714285714286%);
     text-align: center;
     font-weight: 500;
     margin-bottom: 0.5rem;
@@ -174,7 +179,7 @@ const getEventsForDate = (date: Date) => {
 
 .calendar__grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 14.285714285714286%);
     grid-template-rows: repeat(6, 1fr);
     flex: 1;
     gap: 1px;
@@ -232,20 +237,23 @@ const getEventsForDate = (date: Date) => {
     flex: 1;
     padding: 0 0.5rem 0.5rem;
     overflow: hidden;
+    display: flex;
 }
 
 .calendar__day-events {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 0.25rem;
+    overflow: hidden;
 }
 
 .calendar__day-event {
     background-color: var(--event-color, var(--bs-primary));
     color: #fff;
-    font-size: 0.8rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    font-size: 1rem;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

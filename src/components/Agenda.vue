@@ -8,7 +8,7 @@
             <div class="agenda__checkbox">
                 <Check v-if="isSelected" />
             </div>
-            <div class="agenda__name">Agenda A</div>
+            <div class="agenda__name">{{ name }}</div>
         </div>
 
         <div class="dropdown ms-auto dropendown-end">

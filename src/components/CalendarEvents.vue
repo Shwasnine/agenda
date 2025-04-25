@@ -12,16 +12,20 @@
                 v-for="event in eventsForSelectedDate"
                 :key="event.id"
                 class="calendar-events__item"
-                :style="{ '--event-color': event.color }"
+                :style="{ '--event-color': event.cor }"
             >
                 <div class="calendar-events__color-marker"></div>
                 <div class="calendar-events__content">
-                    <div class="calendar-events__title">{{ event.title }}</div>
+                    <div class="calendar-events__title">{{ event.titulo }}</div>
                     <div
-                        v-if="event.description"
+                        v-if="event.descricao"
                         class="calendar-events__description"
                     >
-                        {{ event.description }}
+                        {{ event.descricao }}
+                    </div>
+                    <div class="calendar-events__horario">
+                        {{ formatDate(event.dataInicio, 'HH:MM') }} ás
+                        {{ formatDate(event.dataFim, 'HH:MM') }}
                     </div>
                 </div>
             </div>
@@ -39,7 +43,7 @@ import { useDateUtils } from '../composables/useDateUtils';
 import { useCalendar } from '../composables/useCalendar';
 
 const { currentDate } = useCurrentDate();
-const { formatLongDate } = useDateUtils('pt-BR');
+const { formatLongDate, formatDate } = useDateUtils('pt-BR');
 const { eventsForSelectedDate } = useCalendar();
 </script>
 

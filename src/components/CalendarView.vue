@@ -23,7 +23,7 @@ const { viewMode, viewModeText } = useViewMode();
 
 <style lang="scss" scoped>
 .calendar__view {
-    grid-column: 2 / -1;
+    grid-column: 2 / 3;
     grid-row: 2 / -1;
     height: 100%;
     overflow: auto;

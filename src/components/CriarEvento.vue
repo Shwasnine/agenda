@@ -11,7 +11,12 @@
         </button>
 
         <div class="dropdown-menu">
-            <button class="dropdown-item">Evento</button>
+            <button
+                class="dropdown-item"
+                @click.prevent="modalEventoOpen = true"
+            >
+                Evento
+            </button>
             <button class="dropdown-item">Tarefa</button>
             <button class="dropdown-item">Agendamento de Horários</button>
         </div>
@@ -19,7 +24,10 @@
 </template>
 
 <script lang="ts" setup>
+import { inject } from 'vue';
 import { Plus, ChevronDown } from 'lucide-vue-next';
+
+const modalEventoOpen = inject<boolean>('modalEventoOpen');
 </script>
 
 <style lang="scss" scoped>
