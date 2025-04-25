@@ -20,15 +20,6 @@
                 />
             </div>
         </div>
-
-        <button
-            class="btn w-100 d-flex align-items-center gap-2 btn-secondary"
-            data-bs-toggle="modal"
-            data-bs-target="#modalCreateAgenda"
-        >
-            <div class="w-100 text-truncate text-start">Criar Agenda</div>
-            <Plus />
-        </button>
     </div>
 
     <Teleport to="body">
@@ -81,9 +72,10 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { ChevronDown, Plus } from 'lucide-vue-next';
+import { ChevronDown } from 'lucide-vue-next';
 import Agenda from './Agenda.vue';
 import { useStore } from '../stores/useStore';
+import { Cores } from '../models/Cores';
 
 const { State } = useStore();
 
@@ -96,12 +88,12 @@ const agendas = computed(() => State.agendas);
 const onUpdateAgenda = (payload: {
     selected: boolean;
     id: string | number;
-    color?: string;
+    cor?: Cores | string;
 }) => {
     const agenda = agendas.value.find((agenda) => agenda.id === payload.id);
     if (agenda) {
         agenda.selected = payload.selected;
-        agenda.color = payload.color || agenda.color;
+        agenda.cor = (payload.cor as Cores) || (agenda.cor as Cores);
     }
 };
 </script>

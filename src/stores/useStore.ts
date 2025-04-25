@@ -25,8 +25,11 @@ const State = reactive({
     },
 });
 
+const getAgenda = (id: string) => State.agendas.find((item) => item.id == id);
+
 export const useStore = () => {
     return {
         State,
+        getAgenda,
     };
 };

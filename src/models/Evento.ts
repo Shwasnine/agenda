@@ -1,3 +1,5 @@
+import type { Agenda } from './Agenda';
+
 export interface Evento {
     id: string;
     titulo: string;
@@ -6,7 +8,7 @@ export interface Evento {
     dataFim: Date;
     localizacao?: string;
     isFullDay: boolean;
-    cor?: string;
+    agenda?: Agenda['id'];
     repetir?: RegrasRepeticao;
     lembretes?: Lembrete[];
     convidados?: Convidado[];

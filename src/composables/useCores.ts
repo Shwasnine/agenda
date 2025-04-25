@@ -54,11 +54,11 @@ export const useColors = () => {
         },
         {
             name: 'Manga',
-            color: '#795548',
+            color: '#F09300',
         },
         {
             name: 'Psitache',
-            color: '#F09300',
+            color: '#7CB342',
         },
         {
             name: 'Pavão',

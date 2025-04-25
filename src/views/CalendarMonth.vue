@@ -40,7 +40,9 @@
                             v-for="event in getEventsForDate(day.date)"
                             :key="event.id"
                             class="calendar__day-event"
-                            :style="{ '--event-color': event.cor }"
+                            :style="{
+                                '--event-color': corDoEvento(event.agenda),
+                            }"
                             v-tooltip="{
                                 title: event.titulo,
                             }"
@@ -53,20 +55,33 @@
                 </div>
             </div>
         </div>
+
+        <CalendarEvents class="calendar__month-view__eventos" />
     </main>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { useStore } from '../stores/useStore';
 import { useDateUtils } from '../composables/useDateUtils';
 import { useCurrentDate } from '../composables/useCurrentDate';
 import { useCalendar } from '../composables/useCalendar';
+
+import CalendarEvents from '../components/CalendarEvents.vue';
 
 // Composables
 const { currentDate, setCurrentDate, isToday, isCurrentDate } =
     useCurrentDate();
 const { getWeekdayName } = useDateUtils('pt-BR');
 const { events, hasEvents } = useCalendar();
+const { getAgenda } = useStore();
+
+const corDoEvento = (agendaID: string | undefined) => {
+    if (!agendaID) return;
+    const agenda = getAgenda(agendaID);
+
+    return agenda?.cor;
+};
 
 // Nomes dos dias da semana
 const weekdayLabels = computed(() => {
@@ -155,18 +170,21 @@ const getEventsForDate = (date: Date) => {
 
 <style lang="scss" scoped>
 .calendar__month-view {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    grid-template-rows: min-content 1fr;
     height: 100%;
     overflow: hidden;
 }
 
 .calendar__weekdays {
+    grid-column: 1/2;
+    grid-row: 1/2;
+
     display: grid;
     grid-template-columns: repeat(7, 14.285714285714286%);
     text-align: center;
     font-weight: 500;
-    margin-bottom: 0.5rem;
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--bs-border-color);
 
@@ -178,6 +196,9 @@ const getEventsForDate = (date: Date) => {
 }
 
 .calendar__grid {
+    grid-column: 1/2;
+    grid-row: 2/-1;
+
     display: grid;
     grid-template-columns: repeat(7, 14.285714285714286%);
     grid-template-rows: repeat(6, 1fr);
@@ -185,7 +206,6 @@ const getEventsForDate = (date: Date) => {
     gap: 1px;
     background-color: var(--bs-border-color);
     border: 1px solid var(--bs-border-color);
-    border-radius: 0.25rem;
     overflow: hidden;
 }
 
@@ -275,5 +295,10 @@ const getEventsForDate = (date: Date) => {
             }
         }
     }
+}
+
+.calendar__month-view__eventos {
+    grid-column: 2/3;
+    grid-row: 1/-1;
 }
 </style>

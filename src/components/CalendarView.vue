@@ -27,7 +27,6 @@ const { viewMode, viewModeText } = useViewMode();
     grid-row: 2 / -1;
     height: 100%;
     overflow: auto;
-    padding: 1rem;
     background-color: var(--bs-body-bg);
     transition: margin-left 0.3s ease;
 }

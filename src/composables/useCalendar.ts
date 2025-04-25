@@ -6,7 +6,7 @@ import type { Evento } from '../models/Evento';
 
 export const useCalendar = () => {
     const { currentDate } = useCurrentDate();
-    const { State } = useStore();
+    const { State, getAgenda } = useStore();
 
     // Eventos armazenados no State
     const events = computed(() => State.eventos);
@@ -15,10 +15,12 @@ export const useCalendar = () => {
     const eventsForSelectedDate = computed(() => {
         return events.value.filter((event) => {
             const eventDate = new Date(event.dataInicio);
+            const agenda = getAgenda(event.agenda as string);
             return (
                 eventDate.getDate() === currentDate.value.getDate() &&
                 eventDate.getMonth() === currentDate.value.getMonth() &&
-                eventDate.getFullYear() === currentDate.value.getFullYear()
+                eventDate.getFullYear() === currentDate.value.getFullYear() &&
+                agenda?.selected
             );
         });
     });

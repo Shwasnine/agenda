@@ -17,8 +17,7 @@
             >
                 Evento
             </button>
-            <button class="dropdown-item">Tarefa</button>
-            <button class="dropdown-item">Agendamento de Horários</button>
+            <button class="dropdown-item">Agenda</button>
         </div>
     </div>
 </template>

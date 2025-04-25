@@ -2,83 +2,98 @@
     <div
         class="agenda__filtro"
         :class="{ 'agenda__filtro--selected': isSelected }"
-        :style="{ '--agenda-color': PROPS.color }"
+        :style="{ '--agenda-color': PROPS.cor }"
     >
-        <div class="agenda__filtro__option" @click.prevent="toggleSelection">
-            <div class="agenda__checkbox">
+        <div class="agenda__filtro__option">
+            <div class="agenda__checkbox" @click.prevent="toggleSelection">
                 <Check v-if="isSelected" />
             </div>
-            <div class="agenda__name">{{ name }}</div>
+            <div class="agenda__name">{{ nome }}</div>
         </div>
 
         <div class="dropdown ms-auto dropendown-end">
-            <button class="btn" data-bs-toggle="dropdown">
+            <button
+                class="btn"
+                ref="dropdownToggler"
+                @click.prevent.stop="toggleMenu"
+                :aria-expanded="shown"
+            >
                 <EllipsisVertical />
             </button>
+        </div>
+    </div>
 
-            <div class="dropdown-menu">
-                <button class="dropdown-item text-truncate">
-                    Exibir apenas esta
-                </button>
-                <button class="dropdown-item text-truncate">
-                    Configurações e compartilhamento
-                </button>
+    <Teleport to="body">
+        <div
+            class="dropdown-menu dropdown__cores__agenda"
+            :class="{ show: shown }"
+            ref="dropdownMenu"
+        >
+            <div class="dropdown-header fw-bold">Alterar Cor da Agenda</div>
+            <!-- <button class="dropdown-item text-truncate">
+                Exibir apenas esta
+            </button>
+            <button class="dropdown-item text-truncate">
+                Configurações e compartilhamento
+            </button> -->
 
-                <div class="dropdown-divider"></div>
+            <div class="dropdown-divider"></div>
 
-                <div class="d-flex gap-2 px-2 flex-wrap" ref="colorContainer">
-                    <div
-                        v-for="item in materialColorList"
-                        class="agenda__color__item"
-                        :class="{
-                            'agenda__color__item--selected':
-                                isSelectedColor(item),
-                        }"
-                        :style="{ backgroundColor: item.color }"
-                        v-tooltip="{
-                            title: item.name,
-                        }"
-                        @click.prevent="selectNewColor(item)"
-                    >
-                        <Check v-if="isSelectedColor(item)" />
-                        <span class="visually-hidden">{{ item.name }}</span>
-                    </div>
+            <div class="d-flex gap-2 px-2 flex-wrap" ref="colorContainer">
+                <div
+                    v-for="item in materialColorList"
+                    class="agenda__color__item"
+                    :class="{
+                        'agenda__color__item--selected': true,
+                    }"
+                    :style="{ backgroundColor: item.color }"
+                    v-tooltip="{
+                        title: item.name,
+                    }"
+                    @click.prevent="changeColor(item.color)"
+                >
+                    <Check v-if="isSelectedColor(item.color)" />
+                    <span class="visually-hidden">{{ item.name }}</span>
                 </div>
             </div>
         </div>
-    </div>
+    </Teleport>
     <!-- /.agenda__filtro-->
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { createPopper, offset } from '@popperjs/core';
 
 import { Check, EllipsisVertical } from 'lucide-vue-next';
 import { useColors } from '../composables/useCores';
+import { Cores } from '../models/Cores';
 
 const PROPS = defineProps<{
     id: number | string;
-    name: string;
-    color: string;
+    nome: string;
+    cor: Cores;
     selected: boolean;
 }>();
 
 const emit = defineEmits<{
     (
         e: 'update:selected',
-        payload: { selected: boolean; id: number | string; color?: string }
+        payload: { selected: boolean; id: number | string; cor?: string }
     ): void;
 }>();
 
+const dropdownToggler = ref<HTMLElement | null>(null);
+const dropdownMenu = ref<HTMLElement | null>(null);
 const colorContainer = ref<HTMLElement | null>(null);
 
 const { materialColorList } = useColors();
 
 const isSelected = computed(() => PROPS.selected);
+const popperInstance = ref();
+const shown = ref<boolean>(false);
 
-const isSelectedColor = (item: { name: string; color: string }) =>
-    item.name === PROPS.name || item.color === PROPS.color;
-
+// Métodos
 const toggleSelection = () => {
     emit('update:selected', {
         selected: !PROPS.selected,
@@ -86,17 +101,57 @@ const toggleSelection = () => {
     });
 };
 
-const selectNewColor = (item: { name: string; color: string }) => {
-    if (item.name === PROPS.name || item.color === PROPS.color) {
-        return;
-    }
+const isSelectedColor = (color: string) => {
+    return color == PROPS.cor;
+};
 
+const toggleMenu = () => {
+    if (shown.value) return closeMenu();
+
+    openMenu();
+};
+
+const openMenu = () => {
+    if (!popperInstance.value) return;
+
+    shown.value = true;
+
+    popperInstance.value.update();
+};
+
+const closeMenu = () => {
+    shown.value = false;
+};
+
+const changeColor = (color: string) => {
     emit('update:selected', {
-        selected: PROPS.selected,
         id: PROPS.id,
-        color: item.color,
+        selected: isSelected.value,
+        cor: color,
     });
 };
+
+onMounted(() => {
+    if (!dropdownToggler.value || !dropdownMenu.value) return;
+
+    popperInstance.value = createPopper(
+        dropdownToggler.value,
+        dropdownMenu.value,
+        {
+            placement: 'right',
+            modifiers: [
+                {
+                    name: 'offset',
+                    options: {
+                        offset: [0, 8],
+                    },
+                },
+            ],
+        }
+    );
+
+    document.addEventListener('click', closeMenu);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -113,13 +168,18 @@ const selectNewColor = (item: { name: string; color: string }) => {
     display: grid;
     grid-template-columns: 1fr min-content;
 
-    &:hover {
+    &:hover,
+    &:has([aria-expanded='true']) {
         background: #eee;
     }
 
     .btn {
         --bs-btn-border-radius: 0.5rem;
         --bs-btn-hover-bg: rgba(0, 0, 0, 0.11);
+
+        &:is([aria-expanded='true']) {
+            --bs-btn-bg: var(--bs-btn-hover-bg);
+        }
     }
 }
 
@@ -172,5 +232,11 @@ const selectNewColor = (item: { name: string; color: string }) => {
 
 .dropdown-menu {
     max-width: 250px;
+}
+</style>
+
+<style>
+.dropdown__cores__agenda {
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
 }
 </style>
