@@ -54,7 +54,7 @@
         </div>
 
         <div v-else class="calendar-events__empty">
-            <div class="alert alert-warning">
+            <div class="alert alert-warning" v-if="qtdeAgendasAtivas == 0">
                 Nenhuma agenda foi selecionada
             </div>
             <div class="alert alert-info">Nenhum evento para esta data</div>
@@ -63,16 +63,21 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue';
 import { useCurrentDate } from '../composables/useCurrentDate';
 import { useDateUtils } from '../composables/useDateUtils';
 import { useCalendar } from '../composables/useCalendar';
 
 import { useStore } from '../stores/useStore';
 
-const { getAgenda } = useStore();
+const { getAgenda, State } = useStore();
 const { currentDate } = useCurrentDate();
 const { formatDate } = useDateUtils('pt-BR');
 const { eventsForSelectedDate } = useCalendar();
+
+const qtdeAgendasAtivas = computed(() => {
+    return State.agendas.filter((agenda) => agenda.selected).length;
+});
 
 const bindAgendaColor = (agendaID: string | undefined) => {
     if (!agendaID) return null;
